@@ -10,18 +10,24 @@ import pstats
 GRIPPER = 'gripper'
 CUP = 'cup'
 VANILLA = 'vanilla_cup'
+STRAWBERRY = 'straw_cup'
+NUTS = 'nuts_cup'
 
 def create_problem(initial_poses):
     # coaster must move to goal
     initial_atoms = [
-        ('Empty', GRIPPER),
+        ('IsEmpty', GRIPPER),
         ('CanMove', GRIPPER),
         ('HasVanilla', VANILLA),
+        ('HasStraw', STRAWBERRY),
+        ('HasNuts', NUTS)
     ]
 
     # final configuration
     goal_literals = [
         ('HasVanilla', CUP),
+        ('HasStraw', CUP), 
+        ('HasNuts', CUP)
     ]
 
     # add the is, at and tablesupport for each object
@@ -49,6 +55,8 @@ def main():
         GRIPPER: (0., 15., 0.),
         CUP: (7.5, 0., 0.),
         VANILLA: (-10., 0., 0.),
+        STRAWBERRY: (-15., 0., 0.),
+        NUTS: (-5., 0., 0.)
     }
 
     problem = create_problem(initial_poses) # our own function to get the PDDL problem

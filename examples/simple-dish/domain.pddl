@@ -19,7 +19,9 @@
     	(AtPose ?cup ?block)
     	(CanMove ?gripper)
     	(HasVanilla ?cup)
-    	(Scooped ?cup)
+        (HasStraw ?cup)
+        (HasNuts ?cup)
+    	(IsEmpty ?gripper)
 
     	; Derived predicates (predicates derived from other predicates, defined with streams)
     	(Unsafe ?control)
@@ -43,29 +45,79 @@
     			(increase (total-cost) 1))
     )
 
-    (:action scoop
-    	:parameters (?gripper ?pose ?pose2 ?cup ?pose3 ?control)
+    (:action scoopvanilla
+    	:parameters (?gripper ?pose ?pose2 ?cup ?pose3 ?control) 
     	:precondition
     		(and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
-    			(AtPose ?gripper ?pose)
+    			(AtPose ?gripper ?pose) (IsEmpty ?gripper)
     			(AtPose ?cup ?pose3) (HasVanilla ?cup))
     	:effect
     		(and (AtPose ?gripper ?pose2) (HasVanilla ?gripper)
-    			(CanMove ?gripper) (Scooped ?gripper)
+    			(CanMove ?gripper) (not (IsEmpty ?gripper))
     			(not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
     )
 
-    (:action dump
+    (:action scoopstraw
+        :parameters (?gripper ?pose ?pose2 ?cup ?pose3 ?control)
+        :precondition
+            (and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
+                (AtPose ?gripper ?pose) (IsEmpty ?gripper)
+                (AtPose ?cup ?pose3) (HasStraw ?cup))
+        :effect
+            (and (AtPose ?gripper ?pose2) (HasStraw ?gripper)
+                (CanMove ?gripper) (not (IsEmpty ?gripper))
+                (not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
+    )
+
+    (:action scoopnuts
+        :parameters (?gripper ?pose ?pose2 ?cup ?pose3 ?control)
+        :precondition
+            (and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
+                (AtPose ?gripper ?pose) (IsEmpty ?gripper)
+                (AtPose ?cup ?pose3) (HasNuts ?cup))
+        :effect
+            (and (AtPose ?gripper ?pose2) (HasNuts ?gripper)
+                (CanMove ?gripper) (not (IsEmpty ?gripper))
+                (not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
+    )
+
+    (:action dumpvanilla
     	:parameters (?gripper ?pose ?pose3 ?cup ?pose2 ?control)
     	:precondition
     		(and (CanDump ?gripper ?pose ?pose3 ?cup ?pose2 ?control)
-    			(AtPose ?gripper ?pose)
+    			(AtPose ?gripper ?pose) (not (IsEmpty ?gripper))
     			(AtPose ?cup ?pose2) (HasVanilla ?gripper))
     	:effect
     		(and (HasVanilla ?cup) (CanMove ?gripper)
-    			(not (HasVanilla ?gripper)) (not (Scooped ?gripper))
+    			(not (HasVanilla ?gripper)) (IsEmpty ?gripper)
     			(not (AtPose ?gripper ?pose)) (AtPose ?gripper ?pose3)
     			(increase (total-cost) 1))
+    )
+
+   (:action dumpstraw
+        :parameters (?gripper ?pose ?pose3 ?cup ?pose2 ?control)
+        :precondition
+            (and (CanDump ?gripper ?pose ?pose3 ?cup ?pose2 ?control)
+                (AtPose ?gripper ?pose) (not (IsEmpty ?gripper))
+                (AtPose ?cup ?pose2) (HasStraw ?gripper))
+        :effect
+            (and (HasStraw ?cup) (CanMove ?gripper)
+                (not (HasStraw ?gripper)) (IsEmpty ?gripper)
+                (not (AtPose ?gripper ?pose)) (AtPose ?gripper ?pose3)
+                (increase (total-cost) 1))
+    )
+
+   (:action dumpnuts
+        :parameters (?gripper ?pose ?pose3 ?cup ?pose2 ?control)
+        :precondition
+            (and (CanDump ?gripper ?pose ?pose3 ?cup ?pose2 ?control)
+                (AtPose ?gripper ?pose) (not (IsEmpty ?gripper))
+                (AtPose ?cup ?pose2) (HasNuts ?gripper))
+        :effect
+            (and (HasNuts ?cup) (CanMove ?gripper)
+                (not (HasNuts ?gripper)) (IsEmpty ?gripper)
+                (not (AtPose ?gripper ?pose)) (AtPose ?gripper ?pose3)
+                (increase (total-cost) 1))
     )
 
     (:derived (Unsafe ?control)

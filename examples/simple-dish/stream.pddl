@@ -8,7 +8,27 @@
 		:certified (and (Motion ?gripper ?pose ?pose2 ?control) (IsControl ?control))
 	)
 
-	(:stream sample-scoop
+	(:stream sample-scoopvanilla
+		:inputs (?gripper ?cup ?pose3)
+		:domain (and (IsGripper ?gripper)
+					(IsCup ?cup) (IsPose ?cup ?pose3))
+		:outputs (?pose ?pose2 ?control)
+		:certified (and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
+						(IsPose ?gripper ?pose) (IsPose ?gripper ?pose2)
+						)
+	)
+
+	(:stream sample-scoopstraw
+		:inputs (?gripper ?cup ?pose3)
+		:domain (and (IsGripper ?gripper)
+					(IsCup ?cup) (IsPose ?cup ?pose3))
+		:outputs (?pose ?pose2 ?control)
+		:certified (and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
+						(IsPose ?gripper ?pose) (IsPose ?gripper ?pose2)
+						)
+	)
+
+	(:stream sample-scoopnuts
 		:inputs (?gripper ?cup ?pose3)
 		:domain (and (IsGripper ?gripper)
 					(IsCup ?cup) (IsPose ?cup ?pose3))
