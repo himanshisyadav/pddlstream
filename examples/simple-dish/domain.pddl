@@ -4,25 +4,20 @@
     	; Static predicates (predicates that do not change over time)
     	(IsGripper ?gripper) ; gripper is the robot? 
     	(IsCup ?cup)
-    	(IsSpoon ?kettle)
-    	(IsBlock ?cup)	;why is cup a block
-    	(IsPourable ?cup)
+        ; kettle is a cup and vanilla_cup
+        ; spoon is a cup
 
     	(IsPose ?cup ?pose) ;only cup has pose?
     	(IsGrasp ?cup ?grasp) ; only cup can be grasped? 
     	(IsControl ?control) ; what does this mean? 
 
     	(CanGrasp ?gripper ?pose ?cup ?pose2 ?grasp ?control)
-    	(BelowFaucet ?gripper ?pose ?cup ?grasp)
-    	(CanPour ?gripper ?pose ?cup ?grasp ?kettle ?pose2 ?control)
     	(Motion ?gripper ?pose ?pose2 ?control) ; what does this mean? 
     	(MotionH ?gripper ?pose ?cup ?grasp ?pose2 ?control)
 
-    	(CanScoop ?gripper ?pose ?pose2 ?spoon ?grasp ?kettle ?pose3 ?control)
-    	(CanDump ?gripper ?pose ?pose3 ?spoon ?grasp ?kettle ?pose2 ?control)
-    	(CanPush ?gripper ?pose ?pose2 ?cup ?pose3 ?pose4 ?control)
+    	(CanScoop ?gripper ?pose ?pose2 ?kettle ?pose3 ?control)
+    	(CanDump ?gripper ?pose ?pose3 ?kettle ?pose2 ?control)
 
-    	(BlockSupport ?cup ?pose ?block ?pose2)
     	(Clear ?block)
     	(TableSupport ?pose)
 
@@ -31,9 +26,7 @@
     	(Grasped ?cup ?grasp)
     	(Empty ?gripper)
     	(CanMove ?gripper)
-    	(HasCoffee ?cup)
     	(HasVanilla ?cup)
-    	(HasCream ?cup)
     	(Scooped ?cup)
 
     	; Derived predicates (predicates derived from other predicates, defined with streams)
@@ -80,61 +73,28 @@
     			(not (AtPose ?cup ?pose2)) (not (Empty ?gripper))
     			(increase (total-cost) 1))
     )
-    (:action place
-		:parameters (?gripper ?pose ?cup ?pose2 ?grasp ?control)
-		:precondition
-			(and (CanGrasp ?gripper ?pose ?cup ?pose2 ?grasp ?control)
-				(AtPose ?gripper ?pose) (TableSupport ?pose2)
-				(Grasped ?cup ?grasp) (not (Scooped ?cup)))
-		:effect
-			(and (AtPose ?cup ?pose2) (Empty ?gripper)
-				(CanMove ?gripper) (not (Grasped ?cup ?grasp))
-				(increase (total-cost) 1))
-    )
-    (:action fill
-        ; fill with coffee
-    	:parameters (?gripper ?pose ?cup ?grasp)
-    	:precondition
-    		(and (BelowFaucet ?gripper ?pose ?cup ?grasp)
-    		    (AtPose ?gripper ?pose) (Grasped ?cup ?grasp))
-    	:effect
-    		(and (HasCoffee ?cup) (CanMove ?gripper)
-    			(increase (total-cost) 1))
-    )
-    (:action pour
-    	; why named kettle
-        ; pour cream into kettle from cup
-    	:parameters (?gripper ?pose ?cup ?grasp ?kettle ?pose2 ?control)
-    	:precondition
-    		(and (CanPour ?gripper ?pose ?cup ?grasp ?kettle ?pose2 ?control)
-    			(AtPose ?gripper ?pose) (Grasped ?cup ?grasp)
-    			(AtPose ?kettle ?pose2) (HasCream ?cup))
-    	:effect
-    		(and (HasCream ?kettle) (CanMove ?gripper)
-    			(not (HasCream ?cup)) (increase (total-cost) 1))
-    )
     (:action scoop
         ; scoop sugar into spoon if already holding spoon
-    	:parameters (?gripper ?pose ?pose2 ?spoon ?grasp ?kettle ?pose3 ?control)
+    	:parameters (?gripper ?pose ?pose2 ?kettle ?pose3 ?control)
     	:precondition
-    		(and (CanScoop ?gripper ?pose ?pose2 ?spoon ?grasp ?kettle ?pose3 ?control)
-    			(AtPose ?gripper ?pose) (Grasped ?spoon ?grasp)
+    		(and (CanScoop ?gripper ?pose ?pose2 ?kettle ?pose3 ?control)
+    			(AtPose ?gripper ?pose)
     			(AtPose ?kettle ?pose3) (HasVanilla ?kettle))
     	:effect
-    		(and (AtPose ?gripper ?pose2) (HasVanilla ?spoon)
-    			(CanMove ?gripper) (Scooped ?spoon)
+    		(and (AtPose ?gripper ?pose2) (HasVanilla ?gripper)
+    			(CanMove ?gripper) (Scooped ?gripper)
     			(not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
     )
     (:action dump
         ; add sugar to kettle from spoon
-    	:parameters (?gripper ?pose ?pose3 ?spoon ?grasp ?kettle ?pose2 ?control)
+    	:parameters (?gripper ?pose ?pose3 ?kettle ?pose2 ?control)
     	:precondition
-    		(and (CanDump ?gripper ?pose ?pose3 ?spoon ?grasp ?kettle ?pose2 ?control)
-    			(AtPose ?gripper ?pose) (Grasped ?spoon ?grasp)
-    			(AtPose ?kettle ?pose2) (HasVanilla ?spoon))
+    		(and (CanDump ?gripper ?pose ?pose3 ?kettle ?pose2 ?control)
+    			(AtPose ?gripper ?pose)
+    			(AtPose ?kettle ?pose2) (HasVanilla ?gripper))
     	:effect
     		(and (HasVanilla ?kettle) (CanMove ?gripper)
-    			(not (HasVanilla ?spoon)) (not (Scooped ?spoon))
+    			(not (HasVanilla ?gripper)) (not (Scooped ?gripper))
     			(not (AtPose ?gripper ?pose)) (AtPose ?gripper ?pose3)
     			(increase (total-cost) 1))
     )
@@ -146,10 +106,6 @@
     (:derived (Holding ?cup)
         (exists (?grasp) (and (IsGrasp ?cup ?grasp) (Grasped ?cup ?grasp)))
     )
-    ; if cup is on a block (block is a coaster?)
-    (:derived (On ?cup ?block)
-        (exists (?pose ?pose2) (and (BlockSupport ?cup ?pose ?block ?pose2)
-                                    (AtPose ?cup ?pose) (AtPose ?block ?pose2)))
-    )
+
 )
 
