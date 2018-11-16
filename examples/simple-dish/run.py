@@ -9,30 +9,23 @@ import pstats
 
 GRIPPER = 'gripper'
 CUP = 'cup'
-COASTER = 'block'
 SUGAR = 'sugar_cup'
 CREAM = 'cream_cup'
 SPOON = 'spoon'
 STIRRER = 'stirrer'
 
 def create_problem(initial_poses):
-    block_goal = (-25, 0, 0)
-
+    # coaster must move to goal
     initial_atoms = [
-        ('IsPose', COASTER, block_goal),    # pose of the coaster
         ('Empty', GRIPPER),
         ('CanMove', GRIPPER),
         ('HasSugar', SUGAR),
         ('HasCream', CREAM),
         ('IsPourable', CREAM),
-        ('Stackable', CUP, COASTER),
-        ('Clear', COASTER)]
+    ]
 
     # final configuration
     goal_literals = [
-        ('Empty', GRIPPER),
-        ('AtPose', COASTER, block_goal),
-        ('On', CUP, COASTER),
         ('HasCoffee', CUP),
         ('HasCream', CUP),
         ('HasSugar', CUP),
@@ -49,8 +42,6 @@ def create_problem(initial_poses):
             initial_atoms += [('IsSpoon', name), ('IsStirrer', name)]
         if  STIRRER in name:
             initial_atoms += [('IsStirrer', name)]
-        if  COASTER in name:
-            initial_atoms += [('IsBlock', name)]
         initial_atoms += [('IsPose', name, pose), ('AtPose', name, pose), ('TableSupport', pose)]
 
     # read domain and stream files
@@ -73,7 +64,6 @@ def main():
         CREAM: (15., 0, 0),
         SPOON: (0.5, 0.5, 0),
         STIRRER: (20, 0.5, 0),
-        COASTER: (-20., 0, 0),
     }
 
     problem = create_problem(initial_poses) # our own function to get the PDDL problem
@@ -83,10 +73,10 @@ def main():
     #unit_efforts=False, effort_weight=None, eager_layers=1, search_sampling_ratio=1, use_skeleton=True, visualize=False,
     #verbose=True, postprocess=False, **search_kwargs)
     # can i set max time? 
-    solution = solve_focused(problem, unit_costs=True, planner='ff-eager', debug=False, verbose=False, visualize=True) # max_planner_time=5,
+    solution = solve_focused(problem, unit_costs=True, planner='ff-eager', debug=False, verbose=False) # max_planner_time=5,
     pr.disable()
     print_solution(solution)
-    pstats.Stats(pr).sort_stats('tottime').print_stats(10)
+    # pstats.Stats(pr).sort_stats('tottime').print_stats(10)
 
 if __name__ == '__main__':
     main()

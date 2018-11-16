@@ -11,15 +11,6 @@
 		:outputs (?control)
 		:certified (and (Motion ?gripper ?pose ?pose2 ?control) (IsControl ?control))
 	)
-	(:stream sample-push
-		:inputs (?gripper ?block ?pose3 ?pose4)
-		:domain (and (IsGripper ?gripper) (IsBlock ?block)
-					(IsPose ?block ?pose3) (IsPose ?block ?pose4))
-		:outputs (?pose ?pose2 ?control)
-		:certified (and (CanPush ?gripper ?pose ?pose2 ?block ?pose3 ?pose4 ?control)
-						(IsPose ?gripper ?pose) (IsPose ?gripper ?pose2))
-
-	)
 	(:stream sample-motion-h
 		:inputs (?gripper ?pose ?cup ?grasp ?pose2)
 		:domain (and (IsGripper ?gripper) (IsPose ?gripper ?pose)
@@ -35,13 +26,6 @@
 		:outputs (?grasp ?pose ?control)
 		:certified (and (CanPour ?gripper ?pose ?cup ?grasp ?kettle ?pose2 ?control)
 						(IsPose ?gripper ?pose) (IsGrasp ?cup ?grasp))
-	)
-	(:stream sample-stack
-		:inputs (?cup ?block ?pose2)
-		:domain (and (Stackable ?cup ?block) (IsPose ?block ?pose2))
-		:outputs (?pose)
-		:certified (and (BlockSupport ?cup ?pose ?block ?pose2)
-						(IsPose ?cup ?pose))
 	)
 	(:stream sample-grasp-ctrl
 		:inputs (?gripper ?cup ?pose2 ?grasp)

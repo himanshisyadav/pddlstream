@@ -24,7 +24,6 @@
     	(CanStir ?gripper ?pose ?spoon ?grasp ?kettle ?pose2 ?control)
     	(CanPush ?gripper ?pose ?pose2 ?cup ?pose3 ?pose4 ?control)
 
-    	(Stackable ?cup ?block)
     	(BlockSupport ?cup ?pose ?block ?pose2)
     	(Clear ?block)
     	(TableSupport ?pose)
@@ -73,17 +72,6 @@
     		(and (AtPose ?gripper ?pose2) (not (AtPose ?gripper ?pose))
     			(not (CanMove ?gripper)) (increase (total-cost) 1))
     )
-    (:action push
-    	:parameters (?gripper ?pose ?pose2 ?block ?pose3 ?pose4 ?control)
-    	:precondition
-    		(and (CanPush ?gripper ?pose ?pose2 ?block ?pose3 ?pose4 ?control)
-    			(AtPose ?gripper ?pose) (AtPose ?block ?pose3)
-    			(Empty ?gripper) (Clear ?block))
-    	:effect
-    		(and (AtPose ?gripper ?pose2) (AtPose ?block ?pose4)
-    			(CanMove ?gripper) (not (AtPose ?gripper ?pose))
-    			(not (AtPose ?block ?pose3)) (increase (total-cost) 1))
-    )
     (:action pick
     	:parameters	(?gripper ?pose ?cup ?pose2 ?grasp ?control)
     	:precondition
@@ -105,19 +93,6 @@
 			(and (AtPose ?cup ?pose2) (Empty ?gripper)
 				(CanMove ?gripper) (not (Grasped ?cup ?grasp))
 				(increase (total-cost) 1))
-    )
-    (:action stack
-        ; stack cup on block?
-    	:parameters (?gripper ?pose ?cup ?pose2 ?grasp ?block ?pose3 ?control)
-    	:precondition
-    		(and (CanGrasp ?gripper ?pose ?cup ?pose2 ?grasp ?control)
-    			(BlockSupport ?cup ?pose2 ?block ?pose3)
-    			(AtPose ?gripper ?pose) (Grasped ?cup ?grasp)
-    			(AtPose ?block ?pose3) (Clear ?block))
-    	:effect
-    		(and (AtPose ?cup ?pose2) (Empty ?gripper)
-    			(CanMove ?gripper) (not (Grasped ?cup ?grasp))
-    			(not (Clear ?block)) (increase (total-cost) 1))
     )
     (:action fill
         ; fill with coffee
