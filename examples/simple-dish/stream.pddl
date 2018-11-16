@@ -35,12 +35,6 @@
 		:certified (and (CanGrasp ?gripper ?pose ?cup ?pose2 ?grasp ?control)
 						(IsPose ?gripper ?pose) (IsControl ?control))
 	)
-	(:stream sample-grasp-stirrer
-		:inputs (?spoon)
-		:domain (IsStirrer ?spoon)
-		:outputs (?grasp)
-		:certified (IsGrasp ?spoon ?grasp)
-	)
 	(:stream sample-grasp-cup
 		:inputs (?cup)
 		:domain (IsCup ?cup)
@@ -72,13 +66,5 @@
 		:outputs (?pose ?pose3 ?control)
 		:certified (and (CanDump ?gripper ?pose ?pose3 ?spoon ?grasp ?kettle ?pose2 ?control)
 						(IsPose	?gripper ?pose) (IsPose ?gripper ?pose3))
-	)
-	(:stream sample-stir
-		:inputs (?gripper ?spoon ?grasp ?kettle ?pose2)
-		:domain (and (IsGripper ?gripper) (IsStirrer ?spoon)
-					(IsGrasp ?spoon ?grasp) (IsCup ?kettle) (IsPose ?kettle ?pose2))
-		:outputs (?pose ?control)
-		:certified (and (CanStir ?gripper ?pose ?spoon ?grasp ?kettle ?pose2 ?control)
-						(IsPose ?gripper ?pose))
 	)
 )

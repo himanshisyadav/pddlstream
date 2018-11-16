@@ -9,17 +9,16 @@ import pstats
 
 GRIPPER = 'gripper'
 CUP = 'cup'
-SUGAR = 'sugar_cup'
+VANILLA = 'sugar_cup'
 CREAM = 'cream_cup'
 SPOON = 'spoon'
-STIRRER = 'stirrer'
 
 def create_problem(initial_poses):
     # coaster must move to goal
     initial_atoms = [
         ('Empty', GRIPPER),
         ('CanMove', GRIPPER),
-        ('HasSugar', SUGAR),
+        ('HasVanilla', VANILLA),
         ('HasCream', CREAM),
         ('IsPourable', CREAM),
     ]
@@ -28,8 +27,7 @@ def create_problem(initial_poses):
     goal_literals = [
         ('HasCoffee', CUP),
         ('HasCream', CUP),
-        ('HasSugar', CUP),
-        ('Mixed', CUP),
+        ('HasVanilla', CUP),
     ]
 
     # add the is, at and tablesupport for each object
@@ -40,8 +38,6 @@ def create_problem(initial_poses):
             initial_atoms += [('IsCup', name)]
         if  SPOON in name:
             initial_atoms += [('IsSpoon', name), ('IsStirrer', name)]
-        if  STIRRER in name:
-            initial_atoms += [('IsStirrer', name)]
         initial_atoms += [('IsPose', name, pose), ('AtPose', name, pose), ('TableSupport', pose)]
 
     # read domain and stream files
@@ -60,10 +56,9 @@ def main():
     initial_poses = {
         GRIPPER: (0., 15., 0.),
         CUP: (7.5, 0., 0.),
-        SUGAR: (-10., 0., 0.),
+        VANILLA: (-10., 0., 0.),
         CREAM: (15., 0, 0),
         SPOON: (0.5, 0.5, 0),
-        STIRRER: (20, 0.5, 0),
     }
 
     problem = create_problem(initial_poses) # our own function to get the PDDL problem

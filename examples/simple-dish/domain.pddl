@@ -4,7 +4,6 @@
     	; Static predicates (predicates that do not change over time)
     	(IsGripper ?gripper) ; gripper is the robot? 
     	(IsCup ?cup)
-    	(IsStirrer ?kettle) ;kettle is both spoon and stirrer
     	(IsSpoon ?kettle)
     	(IsBlock ?cup)	;why is cup a block
     	(IsPourable ?cup)
@@ -21,7 +20,6 @@
 
     	(CanScoop ?gripper ?pose ?pose2 ?spoon ?grasp ?kettle ?pose3 ?control)
     	(CanDump ?gripper ?pose ?pose3 ?spoon ?grasp ?kettle ?pose2 ?control)
-    	(CanStir ?gripper ?pose ?spoon ?grasp ?kettle ?pose2 ?control)
     	(CanPush ?gripper ?pose ?pose2 ?cup ?pose3 ?pose4 ?control)
 
     	(BlockSupport ?cup ?pose ?block ?pose2)
@@ -34,9 +32,8 @@
     	(Empty ?gripper)
     	(CanMove ?gripper)
     	(HasCoffee ?cup)
-    	(HasSugar ?cup)
+    	(HasVanilla ?cup)
     	(HasCream ?cup)
-    	(Mixed ?cup)
     	(Scooped ?cup)
 
     	; Derived predicates (predicates derived from other predicates, defined with streams)
@@ -122,9 +119,9 @@
     	:precondition
     		(and (CanScoop ?gripper ?pose ?pose2 ?spoon ?grasp ?kettle ?pose3 ?control)
     			(AtPose ?gripper ?pose) (Grasped ?spoon ?grasp)
-    			(AtPose ?kettle ?pose3) (HasSugar ?kettle))
+    			(AtPose ?kettle ?pose3) (HasVanilla ?kettle))
     	:effect
-    		(and (AtPose ?gripper ?pose2) (HasSugar ?spoon)
+    		(and (AtPose ?gripper ?pose2) (HasVanilla ?spoon)
     			(CanMove ?gripper) (Scooped ?spoon)
     			(not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
     )
@@ -134,23 +131,11 @@
     	:precondition
     		(and (CanDump ?gripper ?pose ?pose3 ?spoon ?grasp ?kettle ?pose2 ?control)
     			(AtPose ?gripper ?pose) (Grasped ?spoon ?grasp)
-    			(AtPose ?kettle ?pose2) (HasSugar ?spoon))
+    			(AtPose ?kettle ?pose2) (HasVanilla ?spoon))
     	:effect
-    		(and (HasSugar ?kettle) (CanMove ?gripper)
-    			(not (HasSugar ?spoon)) (not (Scooped ?spoon))
+    		(and (HasVanilla ?kettle) (CanMove ?gripper)
+    			(not (HasVanilla ?spoon)) (not (Scooped ?spoon))
     			(not (AtPose ?gripper ?pose)) (AtPose ?gripper ?pose3)
-    			(increase (total-cost) 1))
-    )
-    (:action stir
-        ; stir if kettle contains cream, sugar and coffee
-    	:parameters (?gripper ?pose ?spoon ?grasp ?kettle ?pose2 ?control)
-    	:precondition
-    		(and (CanStir ?gripper ?pose ?spoon ?grasp ?kettle ?pose2 ?control)
-    			(AtPose ?gripper ?pose) (Grasped ?spoon ?grasp)
-    			(AtPose ?kettle ?pose2) (HasCoffee ?kettle)
-    			(HasCream ?kettle) (HasSugar ?kettle))
-    	:effect
-    		(and (Mixed ?kettle) (CanMove ?gripper)
     			(increase (total-cost) 1))
     )
     ; control is unsafe when collision happens when trying to reach cup
