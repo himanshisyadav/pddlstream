@@ -12,7 +12,7 @@ from examples.pybullet.utils.pybullet_tools.kuka_primitives import BodyPose, Bod
 from examples.pybullet.utils.pybullet_tools.utils import WorldSaver, connect, dump_world, get_pose, set_pose, Pose, \
     Point, set_default_camera, stable_z, \
     BLOCK_URDF, get_configuration, SINK_URDF, STOVE_URDF, load_model, is_placement, get_body_name, \
-    disconnect, DRAKE_IIWA_URDF, get_bodies, user_input, HideOutput
+    disconnect, DRAKE_IIWA_URDF, NIRYO_URDF, get_bodies, user_input, HideOutput
     
 from pddlstream.algorithms.focused import solve_focused
 from pddlstream.language.generator import from_gen_fn, from_fn, empty_gen
@@ -133,7 +133,8 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
 def load_world():
     # TODO: store internal world info here to be reloaded
     with HideOutput():
-        robot = load_model(DRAKE_IIWA_URDF)
+        robot = load_model(NIRYO_URDF)
+        # robot = load_model(DRAKE_IIWA_URDF)
         floor = load_model('models/short_floor.urdf')
         tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=0.5, y=-0.5)))
         tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.5, y=+0.0)))

@@ -11,7 +11,7 @@ from examples.pybullet.utils.pybullet_tools.kuka_primitives import BodyPose, Bod
 from examples.pybullet.utils.pybullet_tools.utils import WorldSaver, connect, dump_world, get_pose, set_pose, Pose, \
     Point, set_default_camera, stable_z, \
     BLOCK_URDF, get_configuration, SINK_URDF, STOVE_URDF, load_model, is_placement, get_body_name, \
-    disconnect, DRAKE_IIWA_URDF, get_bodies, user_input, HideOutput
+    disconnect, DRAKE_IIWA_URDF, NIRYO_URDF, get_bodies, user_input, HideOutput
     
 from pddlstream.algorithms.focused import solve_focused
 from pddlstream.language.generator import from_gen_fn, from_fn, empty_gen
@@ -97,8 +97,8 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
             ('AtConf', conf),
             #('Holding', body),
             #('On', body, fixed[1]),
-            #('On', body, fixed[2]),
-            #('Cleaned', body),
+            # ('On', body, fixed[2]),
+            # ('Cleaned', body),
             ('Cooked', body),
     )
 
@@ -125,11 +125,12 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
 def load_world():
     # TODO: store internal world info here to be reloaded
     with HideOutput():
-        robot = load_model(DRAKE_IIWA_URDF)
+        robot = load_model(NIRYO_URDF)
+        # robot = load_model(DRAKE_IIWA_URDF)
         # robot = load_model(KUKA_IIWA_URDF)
         floor = load_model('models/short_floor.urdf')
-        sink = load_model(SINK_URDF, pose=Pose(Point(x=-0.5)))
-        stove = load_model(STOVE_URDF, pose=Pose(Point(x=+0.5)))
+        sink = load_model(SINK_URDF, pose=Pose(Point(x=-0.3)))
+        stove = load_model(STOVE_URDF, pose=Pose(Point(x=+0.3)))
         block = load_model(BLOCK_URDF, fixed_base=False)
         #cup = load_model('models/dinnerware/cup/cup_small.urdf',
         # Pose(Point(x=+0.5, y=+0.5, z=0.5)), fixed_base=False)
@@ -141,7 +142,7 @@ def load_world():
     }
     movable_bodies = [block]
 
-    set_pose(block, Pose(Point(y=0.5, z=stable_z(block, floor))))
+    set_pose(block, Pose(Point(y=0.3, z=0.2)))
     set_default_camera()
 
     return robot, body_names, movable_bodies
