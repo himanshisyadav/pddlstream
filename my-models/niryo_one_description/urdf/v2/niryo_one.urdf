@@ -29,13 +29,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/collada/base_link.dae"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/collada/base_link.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/stl/base_link.stl"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/stl/base_link.stl"/>
       </geometry>
     </collision>
   </link>
@@ -43,13 +43,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/collada/shoulder_link.dae"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/collada/shoulder_link.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/stl/shoulder_link.stl"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/stl/shoulder_link.stl"/>
       </geometry>
     </collision>
   </link>
@@ -57,13 +57,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/collada/arm_link.dae"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/collada/arm_link.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/stl/arm_link.stl"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/stl/arm_link.stl"/>
       </geometry>
     </collision>
   </link>
@@ -71,13 +71,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/collada/elbow_link.dae"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/collada/elbow_link.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/stl/elbow_link.stl"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/stl/elbow_link.stl"/>
       </geometry>
     </collision>
   </link>
@@ -85,13 +85,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/collada/forearm_link.dae"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/collada/forearm_link.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/stl/forearm_link.stl"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/stl/forearm_link.stl"/>
       </geometry>
     </collision>
   </link>
@@ -99,13 +99,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/collada/wrist_link.dae"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/collada/wrist_link.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/stl/wrist_link.stl"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/stl/wrist_link.stl"/>
       </geometry>
     </collision>
   </link>
@@ -113,18 +113,18 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/collada/hand_link.dae"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/collada/hand_link.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://niryo_one_description/meshes/v2/stl/hand_link.stl"/>
+        <mesh filename="../../../niryo_one_description/meshes/v2/stl/hand_link.stl"/>
       </geometry>
     </collision>
   </link>
   <link name="tool_link">
-	</link>
+  </link>
   <!--Joints -->
   <joint name="ground_joint" type="fixed">
     <parent link="ground_link"/>
