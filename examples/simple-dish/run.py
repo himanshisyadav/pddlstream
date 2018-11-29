@@ -62,10 +62,6 @@ def main():
     problem = create_problem(initial_poses) # our own function to get the PDDL problem
     pr = cProfile.Profile()
     pr.enable()
-    # (problem, stream_info={}, action_info={}, synthesizers=[], max_time=INF, max_cost=INF, unit_costs=False,
-    #unit_efforts=False, effort_weight=None, eager_layers=1, search_sampling_ratio=1, use_skeleton=True, visualize=False,
-    #verbose=True, postprocess=False, **search_kwargs)
-    # can i set max time? 
     solution = solve_focused(problem, unit_costs=True, planner='ff-eager', debug=False, verbose=False) # max_planner_time=5,
     pr.disable()
     print_solution(solution)
