@@ -101,7 +101,7 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
     init += [('Wash', wash)]
     goal = ('and',
             ('AtConf', conf),
-            #('Holding', body),
+            # ('Holding', body),
             #('On', body, fixed[1]),
             ('On', vanilla, fixed[3]),
             ('On', straw, fixed[3]),
@@ -136,9 +136,9 @@ def load_world():
         robot = load_model(NIRYO_URDF)
         # robot = load_model(DRAKE_IIWA_URDF)
         floor = load_model('models/short_floor.urdf')
-        tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=0.5, y=-0.5)))
-        tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.5, y=+0.0)))
-        bowl = load_model('models/bowl.urdf', pose=Pose(Point(y=+0.5)))
+        tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=0.3, y=-0.3)))
+        tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.3, y=+0.0)))
+        bowl = load_model('models/bowl.urdf', pose=Pose(Point(y=+0.3,z=+0.15)))
         scoop_vanilla = load_model('models/vanilla_scoop.urdf', fixed_base=False)
         scoop_straw = load_model('models/straw_scoop.urdf', fixed_base=False)
         wash = load_model('models/tub_wash.urdf', fixed_base=False)
@@ -152,9 +152,9 @@ def load_world():
         wash: 'wash',
     }
     movable_bodies = [scoop_vanilla, scoop_straw, wash]
-    set_pose(scoop_straw, Pose(Point(x=0.5, y=-0.5, z=stable_z(scoop_straw, tub_straw))))
-    set_pose(scoop_vanilla, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla, tub_vanilla))))
-    set_pose(wash, Pose(Point(x=-0.5, y=+0.0, z=stable_z(wash, floor))))
+    set_pose(scoop_straw, Pose(Point(x=0.3, y=-0.3, z=stable_z(scoop_straw, tub_straw))))
+    set_pose(scoop_vanilla, Pose(Point(x=+0.3, y=+0.0, z=stable_z(scoop_vanilla, tub_vanilla))))
+    set_pose(wash, Pose(Point(x=-0.3, y=+0.0, z=-0.05)))
     set_default_camera()
 
     return robot, body_names, movable_bodies
