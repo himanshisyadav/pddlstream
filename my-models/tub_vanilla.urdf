@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="tub_vanilla">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.025" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.2" length="0.3"/>
+      </geometry>
+      <material name="vanilla">
+        <color rgba="0.94921875 0.89453125 0.66796875 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.025" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.2" length="0.3"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

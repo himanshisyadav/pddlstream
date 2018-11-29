@@ -133,7 +133,7 @@ def load_world():
         floor = load_model('models/short_floor.urdf')
         tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=-0.5, y=+0.5)))
         tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.5, y=+0.5)))
-        bowl = load_model('models/plastic_bowl.urdf', pose=Pose(Point(y=0.5)))
+        bowl = load_model('models/bowl.urdf', pose=Pose(Point(y=0.5)))
         scoop_vanilla = load_model('models/vanilla_scoop.urdf', fixed_base=False)
         scoop_straw = load_model('models/straw_scoop.urdf', fixed_base=False)
         

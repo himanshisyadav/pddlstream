@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="tub_straw">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.025" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.2" length="0.3"/>
+      </geometry>
+      <material name="straw">
+        <color rgba="0.984375 0.3515625 0.55078125 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.025" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.2" length="0.3"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>
