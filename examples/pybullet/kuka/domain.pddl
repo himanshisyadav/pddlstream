@@ -1,9 +1,9 @@
-(define (domain pick-and-place)
+(define (domain sorbet-station)
   (:requirements :strips :equality)
   (:predicates
     (Stackable ?o ?r)
-    (Sink ?r)
-    (Stove ?r)
+    (TubVanilla ?r)
+    (TubStraw ?r)
 
     (Grasp ?o ?g)
     (Kin ?o ?p ?g ?q ?t)
@@ -55,13 +55,13 @@
   )
   (:action clean
     :parameters (?o ?r)
-    :precondition (and (Stackable ?o ?r) (Sink ?r)
+    :precondition (and (Stackable ?o ?r) (TubVanilla ?r)
                        (On ?o ?r))
     :effect (Cleaned ?o)
   )
   (:action cook
     :parameters (?o ?r)
-    :precondition (and (Stackable ?o ?r) (Stove ?r)
+    :precondition (and (Stackable ?o ?r) (TubStraw ?r)
                        (On ?o ?r) (Cleaned ?o))
     :effect (and (Cooked ?o)
                  (not (Cleaned ?o)))
