@@ -71,7 +71,8 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
     init = [('CanMove',),
             ('Conf', conf),
             ('AtConf', conf),
-            ('HandEmpty',)]
+            ('HandEmpty',),
+            ('Cleaned',)]
 
     fixed = get_fixed(robot, movable)
     print('Movable:', movable)
@@ -93,8 +94,11 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
         if 'tub_vanilla' in name:
             init += [('TubVanilla', body)]
 
+
     vanilla = movable[0]
     straw = movable[1]
+    wash = movable[2]
+    init += [('Wash', wash)]
     goal = ('and',
             ('AtConf', conf),
             #('Holding', body),
@@ -131,23 +135,25 @@ def load_world():
     with HideOutput():
         robot = load_model(DRAKE_IIWA_URDF)
         floor = load_model('models/short_floor.urdf')
-        tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=-0.5, y=+0.5)))
-        tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.5, y=+0.5)))
-        bowl = load_model('models/bowl.urdf', pose=Pose(Point(y=0.5)))
+        tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=0.5, y=-0.5)))
+        tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.5, y=+0.0)))
+        bowl = load_model('models/bowl.urdf', pose=Pose(Point(y=+0.5)))
         scoop_vanilla = load_model('models/vanilla_scoop.urdf', fixed_base=False)
         scoop_straw = load_model('models/straw_scoop.urdf', fixed_base=False)
-        
+        wash = load_model('models/tub_wash.urdf', fixed_base=False)
 
     body_names = {
         tub_straw: 'tub_straw',
         tub_vanilla: 'tub_vanilla',
         scoop_vanilla: 'scoop_vanilla',
         scoop_straw: 'scoop_straw',
-        bowl: 'bowl'
+        bowl: 'bowl',
+        wash: 'wash',
     }
-    movable_bodies = [scoop_vanilla, scoop_straw]
-    set_pose(scoop_straw, Pose(Point(x=-0.5, y=+0.5, z=stable_z(scoop_straw, tub_straw))))
-    set_pose(scoop_vanilla, Pose(Point(x=+0.5, y=+0.5, z=stable_z(scoop_vanilla, tub_vanilla))))
+    movable_bodies = [scoop_vanilla, scoop_straw, wash]
+    set_pose(scoop_straw, Pose(Point(x=0.5, y=-0.5, z=stable_z(scoop_straw, tub_straw))))
+    set_pose(scoop_vanilla, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla, tub_vanilla))))
+    set_pose(wash, Pose(Point(x=-0.5, y=+0.0, z=stable_z(wash, floor))))
     set_default_camera()
 
     return robot, body_names, movable_bodies

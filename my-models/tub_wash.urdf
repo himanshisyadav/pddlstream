@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="tub_wash">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.025" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.2" length="0.3"/>
+      </geometry>
+      <material name="wash">
+        <color rgba="0.52734375 0.8046875 0.9765625 0.5" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.025" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.2" length="0.3"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>
