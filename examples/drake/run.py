@@ -270,7 +270,8 @@ def get_grasp_gen(mbp, gripper):
         aabb = AABBs[obj_name]
         for transform in get_top_cylinder_grasps(aabb):
             grasp = RelPose(mbp, gripper_frame, obj, transform)
-            yield grasp,
+            # yield grasp
+            yield True,
     return gen
 
 def get_ik_fn(mbp, robot, gripper, distance=0.1, step_size=0.01):

@@ -77,9 +77,8 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
 
     vanilla = movable[0]
     straw = movable[1]
-    choc = movable[2]
-    scoops = [vanilla, straw, choc]
-    wash = movable[3]
+    scoops = [vanilla, straw]
+    wash = movable[2]
 
     print('Movable:', movable)
     print('Fixed:', fixed)
@@ -95,23 +94,11 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
 
     init += [('Stackable', straw, vanilla)]
     init += [('Stackable', vanilla, straw)]
-    init += [('Stackable', vanilla, choc)]
-    init += [('Stackable', choc, vanilla)]
-    init += [('Stackable', straw, choc)]
-    init += [('Stackable', choc, straw)]
-
-    # for body in fixed:
-    #     name = get_body_name(body)
-    #     if 'tub_straw' in name:
-    #         init += [('Tub', body)]
-    #     if 'tub_vanilla' in name:
-    #         init += [('Tub', body)]
 
     # init += [('Tub', wash)]
-    init += [('Bowl', fixed[4])]
+    init += [('Bowl', fixed[3])]
     init += [('Scoop', vanilla)]
     init += [('Scoop', straw)]
-    init += [('Scoop', choc)]
 
     init += [('Wash', wash)]
     goal = ('and',
@@ -120,8 +107,7 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
             #('On', body, fixed[1]),
             # ('First', vanilla, fixed[4]),
             # ('Second', straw, vanilla),
-            # ('Third', choc, straw)
-            ('Order', fixed[4], choc, straw, choc)
+            ('Order', fixed[3], vanilla, straw)
             #('Cleaned', body),
             # ('Cooked', vanilla),
             # ('Cooked', straw),
@@ -154,28 +140,23 @@ def load_world():
         floor = load_model('models/short_floor.urdf')
         tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=0.5, y=-0.5)))
         tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.5, y=+0.0)))
-        tub_choc = load_model('models/tub_chocolate.urdf', pose=Pose(Point(x=+0.5, y=+0.5)))
         bowl = load_model('models/bowl.urdf', pose=Pose(Point(y=+0.5)))
         scoop_vanilla = load_model('models/vanilla_scoop.urdf', fixed_base=False)
         scoop_straw = load_model('models/straw_scoop.urdf', fixed_base=False)
-        scoop_choc = load_model('models/chocolate_scoop.urdf', fixed_base=False)
         wash = load_model('models/tub_wash.urdf', fixed_base=False)
 
     body_names = {
         tub_straw: 'tub_straw',
         tub_vanilla: 'tub_vanilla',
-        tub_choc: 'tub_choc',
         scoop_vanilla: 'scoop_vanilla',
         scoop_straw: 'scoop_straw',
-        scoop_choc: 'scoop_choc',
         bowl: 'bowl',
         wash: 'wash',
     }
     
-    movable_bodies = [scoop_vanilla, scoop_straw, scoop_choc, wash]
+    movable_bodies = [scoop_vanilla, scoop_straw, wash]
     set_pose(scoop_straw, Pose(Point(x=0.5, y=-0.5, z=stable_z(scoop_straw, tub_straw))))
     set_pose(scoop_vanilla, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla, tub_vanilla))))
-    set_pose(scoop_choc, Pose(Point(x=+0.5, y=0.5, z=stable_z(scoop_choc, tub_choc))))
     set_pose(wash, Pose(Point(x=-0.5, y=+0.0, z=stable_z(wash, floor))))
     set_default_camera()
 
