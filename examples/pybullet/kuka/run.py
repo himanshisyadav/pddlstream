@@ -96,21 +96,23 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
                 if is_placement(body, surface):
                     init += [('Supported', body, pose, surface)]
 
-    # init += [('Stackable', straw, vanilla)]
-    # init += [('Stackable', vanilla, straw)]
-
     init += [('isEmpty',)]
-    # init += [('Tub', wash)]
     init += [('Bowl', bowl)]
     init += [('VanillaScoop', vanilla_scoop)]
     init += [('StrawScoop', straw_scoop)]
-
-
     init += [('Wash', wash)]
     goal = ('and',
             ('AtConf', conf),
+
+            ('or',
             ('First', straw_scoop, bowl),
-            ('Second', vanilla_scoop, straw_scoop),
+            ('First', vanilla_scoop, bowl),),
+
+            ('or',
+            ('Second', straw_scoop, vanilla_scoop),
+            ('Second', vanilla_scoop, straw_scoop),),
+
+            # ('Second', vanilla_scoop, straw_scoop),
     )
 
     stream_map = {
