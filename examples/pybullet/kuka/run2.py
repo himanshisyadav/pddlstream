@@ -19,6 +19,8 @@ from pddlstream.language.generator import from_gen_fn, from_fn, empty_gen
 from pddlstream.language.synthesizer import StreamSynthesizer
 from pddlstream.utils import print_solution, read, INF, get_file_path, find_unique
 
+import random
+
 USE_SYNTHESIZERS = False
 
 def get_fixed(robot, movable):
@@ -75,14 +77,23 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
 
     fixed = get_fixed(robot, movable)
 
-    # movable_bodies = [tub_straw, tub_vanilla, scoop_vanilla, scoop_straw, bowl, wash]
+    # movable_bodies = [tub_straw, tub_vanilla, bowl1, bowl2, bowl3, wash, scoop_vanilla1, scoop_vanilla2, scoop_vanilla3, scoop_straw1, scoop_straw2, scoop_straw3]
     tub_straw = movable[0]
     tub_vanilla = movable[1]
-    vanilla_scoop = movable[2]
-    straw_scoop = movable[3]
-    bowl = movable[4]
+    bowl1 = movable[2]
+    bowl2 = movable[3]
+    bowl3 = movable[4]
+
     wash = movable[5]
-    
+
+    vanilla_scoop1 = movable[6]
+    vanilla_scoop2 = movable[7]
+    vanilla_scoop3 = movable[8]
+
+    straw_scoop1 = movable[9]
+    straw_scoop2 = movable[10]
+    straw_scoop3 = movable[11]
+
     print('Movable:', movable)
     print('Fixed:', fixed)
     for body in movable:
@@ -97,20 +108,32 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
                     init += [('Supported', body, pose, surface)]
 
     init += [('isEmpty',)]
-    init += [('Bowl', bowl)]
-    init += [('VanillaScoop', vanilla_scoop)]
-    init += [('StrawScoop', straw_scoop)]
+    init += [('Bowl', bowl1)]
+    init += [('VanillaScoop', vanilla_scoop1)]
+    init += [('VanillaScoop', vanilla_scoop2)]
+    init += [('VanillaScoop', vanilla_scoop3)]
+    init += [('StrawScoop', straw_scoop1)]
+    init += [('StrawScoop', straw_scoop2)]
+    init += [('StrawScoop', straw_scoop3)]
+
     init += [('Wash', wash)]
+
+
+    ss = [straw_scoop1, straw_scoop2, straw_scoop3]
+    vs = [vanilla_scoop1, vanilla_scoop2, vanilla_scoop3]
+
+    random.shuffle(ss)
+    random.shuffle(vs)
+
     goal = ('and',
             ('AtConf', conf),
 
             ('or',
-            ('First', straw_scoop, bowl),
-            ('First', vanilla_scoop, bowl),),
+            ('First', ss[0], bowl1),
+            ),
 
             ('or',
-            ('Second', straw_scoop, vanilla_scoop),
-            ('Second', vanilla_scoop, straw_scoop),),
+            ('Second', vs[0], ss[0]),),
 
             # ('Second', vanilla_scoop, straw_scoop),
     )
@@ -142,27 +165,49 @@ def load_world():
         floor = load_model('models/short_floor.urdf')
         tub_straw = load_model('models/tub_straw.urdf', fixed_base=False )
         tub_vanilla = load_model('models/tub_vanilla.urdf', fixed_base=False )
-        bowl = load_model('models/bowl.urdf', fixed_base=False)
-        scoop_vanilla = load_model('models/vanilla_scoop.urdf', fixed_base=False)
-        scoop_straw = load_model('models/straw_scoop.urdf', fixed_base=False)
         wash = load_model('models/tub_wash.urdf', fixed_base=False)
+
+        bowl1 = load_model('models/bowl.urdf', fixed_base=False)
+        bowl2 = load_model('models/bowl.urdf', fixed_base=False)
+        bowl3 = load_model('models/bowl.urdf', fixed_base=False)
+
+        scoop_vanilla1 = load_model('models/vanilla_scoop.urdf', fixed_base=False)
+        scoop_straw1 = load_model('models/straw_scoop.urdf', fixed_base=False)
+        scoop_vanilla2 = load_model('models/vanilla_scoop.urdf', fixed_base=False)
+        scoop_straw2 = load_model('models/straw_scoop.urdf', fixed_base=False)
+        scoop_vanilla3 = load_model('models/vanilla_scoop.urdf', fixed_base=False)
+        scoop_straw3 = load_model('models/straw_scoop.urdf', fixed_base=False)
 
     body_names = {
         tub_straw: 'tub_straw',
         tub_vanilla: 'tub_vanilla',
-        scoop_vanilla: 'scoop_vanilla',
-        scoop_straw: 'scoop_straw',
-        bowl: 'bowl',
+        scoop_vanilla1: 'scoop_vanilla1',
+        scoop_vanilla2: 'scoop_vanilla2',
+        scoop_vanilla3: 'scoop_vanilla3',
+        scoop_straw1: 'scoop_straw1',
+        scoop_straw2: 'scoop_straw2',
+        scoop_straw3: 'scoop_straw3',
+        bowl1: 'bowl1',
+        bowl2: 'bowl2',
+        bowl3: 'bowl3',
         wash: 'wash',
     }
     
-    movable_bodies = [tub_straw, tub_vanilla, scoop_vanilla, scoop_straw, bowl, wash]
+    movable_bodies = [tub_straw, tub_vanilla, bowl1, bowl2, bowl3, wash, scoop_vanilla1, scoop_vanilla2, scoop_vanilla3, scoop_straw1, scoop_straw2, scoop_straw3]
     set_pose(tub_straw, Pose(Point(x=0.5, y=-0.5, z=-0.1)))
     set_pose(tub_vanilla, Pose(Point(x=+0.5, y=+0.0, z=-0.1)))
-    set_pose(scoop_straw, Pose(Point(x=0.5, y=-0.5, z=stable_z(scoop_straw, tub_straw))))
-    set_pose(scoop_vanilla, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla, tub_vanilla))))
+
+    set_pose(scoop_straw1, Pose(Point(x=0.5, y=-0.5, z=stable_z(scoop_straw1, tub_straw))))
+    set_pose(scoop_vanilla1, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla1, tub_vanilla))))
+    set_pose(scoop_straw2, Pose(Point(x=0.65, y=-0.5, z=stable_z(scoop_straw2, tub_straw))))
+    set_pose(scoop_vanilla2, Pose(Point(x=+0.65, y=+0.0, z=stable_z(scoop_vanilla2, tub_vanilla))))
+    set_pose(scoop_straw3, Pose(Point(x=0.35, y=-0.5, z=stable_z(scoop_straw3, tub_straw))))
+    set_pose(scoop_vanilla3, Pose(Point(x=+0.35, y=+0.0, z=stable_z(scoop_vanilla3, tub_vanilla))))
+
     set_pose(wash, Pose(Point(x=-0.5, y=+0.0, z=-0.1)))
-    set_pose(bowl, Pose(Point(y=+0.5, z=0.2)))
+    set_pose(bowl1, Pose(Point(x=-0.2, y=+0.5, z=0.1)))
+    set_pose(bowl2, Pose(Point(x=-0.0, y=+0.5, z=0.1)))
+    set_pose(bowl3, Pose(Point(x=0.2, y=+0.5, z=0.1)))
     set_default_camera()
 
     return robot, body_names, movable_bodies
@@ -235,7 +280,7 @@ def main(viewer=False, display=True, simulate=False, teleport=False):
         command.control()
     else:
         #command.step()
-        command.refine(num_steps=50).execute(time_step=0.001)
+        command.refine(num_steps=10).execute(time_step=0.001)
 
     #wait_for_interrupt()
     user_input('Finish?')

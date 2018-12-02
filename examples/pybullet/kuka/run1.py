@@ -104,13 +104,9 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
     goal = ('and',
             ('AtConf', conf),
 
-            ('or',
             ('First', straw_scoop, bowl),
-            ('First', vanilla_scoop, bowl),),
 
-            ('or',
-            ('Second', straw_scoop, vanilla_scoop),
-            ('Second', vanilla_scoop, straw_scoop),),
+            ('Second', vanilla_scoop, straw_scoop),
 
             # ('Second', vanilla_scoop, straw_scoop),
     )
