@@ -102,14 +102,15 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
     init += [('isEmpty',)]
     # init += [('Tub', wash)]
     init += [('Bowl', bowl)]
-    init += [('Scoop', vanilla_scoop)]
-    init += [('Scoop', straw_scoop)]
+    init += [('VanillaScoop', vanilla_scoop)]
+    init += [('StrawScoop', straw_scoop)]
+
 
     init += [('Wash', wash)]
     goal = ('and',
             ('AtConf', conf),
-            ('First', vanilla_scoop, bowl),
-            ('Second', straw_scoop, vanilla_scoop),
+            ('First', straw_scoop, bowl),
+            ('Second', vanilla_scoop, straw_scoop),
     )
 
     stream_map = {
@@ -117,14 +118,14 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
         'sample-grasp': from_gen_fn(get_grasp_gen(robot, grasp_name)),
         'inverse-kinematics': from_fn(get_ik_fn(robot, fixed, teleport)),
         'plan-free-motion': from_fn(get_free_motion_gen(robot, fixed, teleport)),
-        # 'plan-holding-motion': from_fn(get_holding_motion_gen(robot, fixed, teleport)),
+        'plan-holding-motion': from_fn(get_holding_motion_gen(robot, fixed, teleport)),
         'TrajCollision': get_movable_collision_test(),
     }
 
     if USE_SYNTHESIZERS:
         stream_map.update({
             'plan-free-motion': empty_gen(),
-            # 'plan-holding-motion': empty_gen(),
+            'plan-holding-motion': empty_gen(),
         })
 
     return domain_pddl, constant_map, stream_pddl, stream_map, init, goal
@@ -171,7 +172,7 @@ def postprocess_plan(plan):
             paths += args[-1].reverse().body_paths
         elif name  == 'dump_second':
             paths += args[-1].reverse().body_paths
-        elif name in ['move', 'move_free', 'move_holding', 'scoop']:
+        elif name in ['move', 'move_free', 'move_holding', 'scoop_vanilla', 'scoop_straw']:
             paths += args[-1].body_paths
     return Command(paths)
 
@@ -196,8 +197,8 @@ def main(viewer=False, display=True, simulate=False, teleport=False):
     synthesizers = [
         StreamSynthesizer('safe-free-motion', {'plan-free-motion': 1, 'trajcollision': 0},
                           from_fn(get_free_motion_synth(robot, movable, teleport))),
-        # StreamSynthesizer('safe-holding-motion', {'plan-holding-motion': 1, 'trajcollision': 0},
-        #                   from_fn(get_holding_motion_synth(robot, movable, teleport))),
+        StreamSynthesizer('safe-holding-motion', {'plan-holding-motion': 1, 'trajcollision': 0},
+                          from_fn(get_holding_motion_synth(robot, movable, teleport))),
     ] if USE_SYNTHESIZERS else []
     print('Init:', init)
     print('Goal:', goal)
