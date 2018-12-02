@@ -25,14 +25,14 @@
     ;:certified (and (Traj ?t) (FreeMotion ?q1 ?t ?q2))
     :certified (FreeMotion ?q1 ?t ?q2)
   )
-  (:stream plan-holding-motion
-    :inputs (?q1 ?q2 ?o ?g)
-    :domain (and (Conf ?q1) (Conf ?q2) (Grasp ?o ?g))
-    :fluents (AtPose)
-    :outputs (?t)
-    ;:certified (and (Traj ?t) (HoldingMotion ?q1 ?t ?q2 ?o ?g))
-    :certified (HoldingMotion ?q1 ?t ?q2 ?o ?g)
-  )
+  ; (:stream plan-holding-motion
+  ;   :inputs (?q1 ?q2 ?o ?g)
+  ;   :domain (and (Conf ?q1) (Conf ?q2) (Grasp ?o ?g))
+  ;   :fluents (AtPose)
+  ;   :outputs (?t)
+  ;   ;:certified (and (Traj ?t) (HoldingMotion ?q1 ?t ?q2 ?o ?g))
+  ;   :certified (HoldingMotion ?q1 ?t ?q2 ?o ?g)
+  ; )
 
   (:predicate (TrajCollision ?t ?o2 ?p2)
     (and (Traj ?t) (Pose ?o2 ?p2))

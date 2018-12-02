@@ -38,7 +38,7 @@
   )
   (:action move_holding
     :parameters (?q1 ?q2 ?o ?g ?t)
-    :precondition (and (HoldingMotion ?q1 ?t ?q2 ?o ?g)
+    :precondition (and (FreeMotion ?q1 ?t ?q2)
                        (AtConf ?q1) (AtGrasp ?o ?g) (CanMove) (Cleaned) (not (UnsafeTraj ?t)))
     :effect (and (AtConf ?q2)
                  (not (AtConf ?q1)) (not (CanMove)))
