@@ -75,11 +75,14 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
 
     fixed = get_fixed(robot, movable)
 
-    vanilla = movable[0]
-    straw = movable[1]
-    scoops = [vanilla, straw]
-    wash = movable[2]
-
+    # movable_bodies = [tub_straw, tub_vanilla, scoop_vanilla, scoop_straw, bowl, wash]
+    tub_straw = movable[0]
+    tub_vanilla = movable[1]
+    vanilla_scoop = movable[2]
+    straw_scoop = movable[3]
+    bowl = movable[4]
+    wash = movable[5]
+    
     print('Movable:', movable)
     print('Fixed:', fixed)
     for body in movable:
@@ -87,34 +90,26 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
         init += [('Graspable', body),
                  ('Pose', body, pose),
                  ('AtPose', body, pose)]
-        for surface in fixed:
-            init += [('Stackable', body, surface)]
-            if is_placement(body, surface):
-                init += [('Supported', body, pose, surface)]
+        for surface in movable:
+            if body != surface:
+                init += [('Stackable', body, surface)]
+                if is_placement(body, surface):
+                    init += [('Supported', body, pose, surface)]
 
-    init += [('Stackable', straw, vanilla)]
-    init += [('Stackable', vanilla, straw)]
+    # init += [('Stackable', straw, vanilla)]
+    # init += [('Stackable', vanilla, straw)]
 
     init += [('isEmpty',)]
     # init += [('Tub', wash)]
-    init += [('Bowl', fixed[3])]
-    init += [('Scoop', vanilla)]
-    init += [('Scoop', straw)]
+    init += [('Bowl', bowl)]
+    init += [('Scoop', vanilla_scoop)]
+    init += [('Scoop', straw_scoop)]
 
     init += [('Wash', wash)]
     goal = ('and',
             ('AtConf', conf),
-            #('Holding', body),
-            #('On', body, fixed[1]),
-            # ('First', vanilla, fixed[4]),
-            # ('Second', straw, vanilla),
-            ('First', vanilla, fixed[3]),
-            ('Second', straw, vanilla),
-            # ('Second', straw),
-            # ('Order', fixed[3], vanilla, straw)
-            #('Cleaned', body),
-            # ('Cooked', vanilla),
-            # ('Cooked', straw),
+            ('First', vanilla_scoop, bowl),
+            ('Second', straw_scoop, vanilla_scoop),
     )
 
     stream_map = {
@@ -142,9 +137,9 @@ def load_world():
     with HideOutput():
         robot = load_model(DRAKE_IIWA_URDF)
         floor = load_model('models/short_floor.urdf')
-        tub_straw = load_model('models/tub_straw.urdf', pose=Pose(Point(x=0.5, y=-0.5)))
-        tub_vanilla = load_model('models/tub_vanilla.urdf', pose=Pose(Point(x=+0.5, y=+0.0)))
-        bowl = load_model('models/bowl.urdf', pose=Pose(Point(y=+0.5, z=0.2)))
+        tub_straw = load_model('models/tub_straw.urdf', fixed_base=False )
+        tub_vanilla = load_model('models/tub_vanilla.urdf', fixed_base=False )
+        bowl = load_model('models/bowl.urdf', fixed_base=False)
         scoop_vanilla = load_model('models/vanilla_scoop.urdf', fixed_base=False)
         scoop_straw = load_model('models/straw_scoop.urdf', fixed_base=False)
         wash = load_model('models/tub_wash.urdf', fixed_base=False)
@@ -158,10 +153,13 @@ def load_world():
         wash: 'wash',
     }
     
-    movable_bodies = [scoop_vanilla, scoop_straw, wash]
+    movable_bodies = [tub_straw, tub_vanilla, scoop_vanilla, scoop_straw, bowl, wash]
+    set_pose(tub_straw, Pose(Point(x=0.5, y=-0.5, z=stable_z(tub_straw, floor))))
+    set_pose(tub_vanilla, Pose(Point(x=+0.5, y=+0.0, z=stable_z(tub_vanilla, floor))))
     set_pose(scoop_straw, Pose(Point(x=0.5, y=-0.5, z=stable_z(scoop_straw, tub_straw))))
     set_pose(scoop_vanilla, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla, tub_vanilla))))
     set_pose(wash, Pose(Point(x=-0.5, y=+0.0, z=stable_z(wash, floor))))
+    set_pose(bowl, Pose(Point(y=+0.5, z=0.2)))
     set_default_camera()
 
     return robot, body_names, movable_bodies
