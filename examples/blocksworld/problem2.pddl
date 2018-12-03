@@ -1,6 +1,6 @@
 (define (problem pb2)
    (:domain blocksworld)
-   (:objects vanilla strawberry cup1 cup2)
+   (:objects vanilla strawberry nuts cup1 cup2)
    (:init
      (is-cup cup1)
      (is-cup cup2)
@@ -8,10 +8,11 @@
      (clear cup2)
      (is-vanilla vanilla)
      (is-straw strawberry)
+     (is-nuts nuts)
    )
    (:goal ( and 
-   				(Order cup1 vanilla strawberry vanilla) 
-   				(Order cup2 vanilla vanilla vanilla) 
+   				(Order cup1 vanilla nuts vanilla) 
+   				(Order cup2 vanilla strawberry nuts) 
    		  )
    )
 )
