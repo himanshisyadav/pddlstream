@@ -12,7 +12,7 @@ from examples.pybullet.utils.pybullet_tools.kuka_primitives import BodyPose, Bod
 from examples.pybullet.utils.pybullet_tools.utils import WorldSaver, connect, dump_world, get_pose, set_pose, Pose, \
     Point, set_default_camera, stable_z, \
     BLOCK_URDF, get_configuration, SINK_URDF, STOVE_URDF, load_model, is_placement, get_body_name, \
-    disconnect, DRAKE_IIWA_URDF, get_bodies, user_input, HideOutput
+    disconnect, DRAKE_IIWA_URDF, get_bodies, user_input, HideOutput, R2D2_URDF
     
 from pddlstream.algorithms.focused import solve_focused
 from pddlstream.language.generator import from_gen_fn, from_fn, empty_gen
@@ -20,6 +20,8 @@ from pddlstream.language.synthesizer import StreamSynthesizer
 from pddlstream.utils import print_solution, read, INF, get_file_path, find_unique
 
 USE_SYNTHESIZERS = False
+
+NIRYO_ONE = "/home/suddhu/software/pddlstream/my-models/niryo_one_description/urdf/v2/niryo_one.urdf"
 
 def get_fixed(robot, movable):
     rigid = [body for body in get_bodies() if body != robot]
@@ -135,6 +137,7 @@ def load_world():
     # TODO: store internal world info here to be reloaded
     with HideOutput():
         robot = load_model(DRAKE_IIWA_URDF)
+        # robot = load_model(NIRYO_ONE)
         floor = load_model('models/short_floor.urdf')
         tub_straw = load_model('models/tub_straw.urdf', fixed_base=False )
         tub_vanilla = load_model('models/tub_vanilla.urdf', fixed_base=False )
@@ -206,11 +209,11 @@ def main(viewer=False, display=True, simulate=False, teleport=False):
 
     pr = cProfile.Profile()
     pr.enable()
-    solution = solve_focused(pddlstream_problem, synthesizers=synthesizers, max_cost=INF)
+    solution = solve_focused(pddlstream_problem, synthesizers=synthesizers, max_cost=INF, verbose=False)
     print_solution(solution)
     plan, cost, evaluations = solution
     pr.disable()
-    pstats.Stats(pr).sort_stats('tottime').print_stats(10)
+    # pstats.Stats(pr).sort_stats('tottime').print_stats(10)
     if plan is None:
         return
 

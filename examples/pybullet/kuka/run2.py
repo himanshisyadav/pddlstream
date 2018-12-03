@@ -257,12 +257,12 @@ def main(viewer=False, display=True, simulate=False, teleport=False):
 
     pr = cProfile.Profile()
     pr.enable()
-    solution = solve_focused(pddlstream_problem, synthesizers=synthesizers, max_cost=INF)
+    solution = solve_focused(pddlstream_problem, synthesizers=synthesizers, max_cost=INF, verbose=False)
 
     print_solution(solution)
     plan, cost, evaluations = solution
     pr.disable()
-    pstats.Stats(pr).sort_stats('tottime').print_stats(10)
+    # pstats.Stats(pr).sort_stats('tottime').print_stats(10)
     if plan is None:
         return
 
