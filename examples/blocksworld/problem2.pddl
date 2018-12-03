@@ -11,8 +11,8 @@
      (is-nuts nuts)
    )
    (:goal ( and 
-   				(Order cup1 vanilla nuts vanilla) 
-   				(Order cup2 vanilla strawberry nuts) 
+   				(Order cup1 vanilla nuts strawberry) 
+   				(Order cup2 vanilla vanilla nuts) 
    		  )
    )
 )
