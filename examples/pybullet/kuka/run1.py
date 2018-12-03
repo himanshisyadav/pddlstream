@@ -61,8 +61,8 @@ def get_holding_motion_synth(robot, movable=[], teleport=False):
 
 def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collisions=False, grasp_name='side'):
     #assert (not are_colliding(tree, kin_cache))
-    domain_pddl = read(get_file_path(__file__, 'domain.pddl'))
-    stream_pddl = read(get_file_path(__file__, 'stream.pddl'))
+    domain_pddl = read(get_file_path(__file__, 'domain1.pddl'))
+    stream_pddl = read(get_file_path(__file__, 'stream1.pddl'))
     constant_map = {}
 
     print('Robot:', robot)
@@ -231,7 +231,7 @@ def main(viewer=False, display=True, simulate=False, teleport=False):
         command.control()
     else:
         #command.step()
-        command.refine(num_steps=50).execute(time_step=0.001)
+        command.refine(num_steps=10).execute(time_step=0.001)
 
     #wait_for_interrupt()
     user_input('Finish?')
