@@ -18,8 +18,8 @@ def read_pddl(filename):
 ##################################################
 
 def solve_pddl():
-    domain_pddl = read_pddl('domain.pddl')
-    problem_pddl = read_pddl('problem.pddl')
+    domain_pddl = read_pddl('domain2.pddl')
+    problem_pddl = read_pddl('problem2.pddl')
 
     plan, cost = solve_from_pddl(domain_pddl, problem_pddl)
     print('Plan:', plan)
@@ -28,7 +28,7 @@ def solve_pddl():
 ##################################################
 
 def get_problem():
-    domain_pddl = read_pddl('domain.pddl')
+    domain_pddl = read_pddl('domain2.pddl')
     constant_map = {}
     stream_pddl = None
     stream_map = {}
@@ -58,8 +58,8 @@ def solve_pddlstream(focused=True):
 # TODO: include my version of FD as a submodule
 
 def main():
-    #solve_pddl()
-    solve_pddlstream()
+    solve_pddl()
+    # solve_pddlstream()
 
 if __name__ == '__main__':
     main()

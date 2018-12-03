@@ -3,7 +3,7 @@
     (:predicates
     	; Static predicates (predicates that do not change over time)
     	(IsGripper ?gripper)
-    	(IsCup ?cup)
+    	(IsCup1 ?cup)
 
     	(IsPose ?cup ?pose)
     	(IsControl ?control)
@@ -13,14 +13,14 @@
     	(CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
     	(CanDump ?gripper ?pose ?pose3 ?cup ?pose2 ?control)
 
-    	(TableSupport ?pose)
-
     	; Fluent predicates (predicates that change over time, which describes the state of the sytem)
     	(AtPose ?cup ?block)
     	(CanMove ?gripper)
-    	(HasVanilla ?cup)
-        (HasStraw ?cup)
-        (HasNuts ?cup)
+
+        (DirtyVanilla)
+        (DirtyStraw)
+        (DirtyNuts)
+
     	(IsEmpty ?gripper)
 
     	; Derived predicates (predicates derived from other predicates, defined with streams)
@@ -50,9 +50,9 @@
     	:precondition
     		(and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
     			(AtPose ?gripper ?pose) (IsEmpty ?gripper)
-    			(AtPose ?cup ?pose3) (HasVanilla ?cup))
+    			(AtPose ?cup ?pose3) (HasVanilla ?cup) (not (DirtyVanilla)))
     	:effect
-    		(and (AtPose ?gripper ?pose2) (HasVanilla ?gripper)
+    		(and (AtPose ?gripper ?pose2) (HasVanilla ?gripper) (DirtyVanilla)
     			(CanMove ?gripper) (not (IsEmpty ?gripper))
     			(not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
     )
@@ -62,9 +62,9 @@
         :precondition
             (and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
                 (AtPose ?gripper ?pose) (IsEmpty ?gripper)
-                (AtPose ?cup ?pose3) (HasStraw ?cup))
+                (AtPose ?cup ?pose3) (HasStraw ?cup) (not (DirtyStraw)))
         :effect
-            (and (AtPose ?gripper ?pose2) (HasStraw ?gripper)
+            (and (AtPose ?gripper ?pose2) (HasStraw ?gripper) (DirtyStraw)
                 (CanMove ?gripper) (not (IsEmpty ?gripper))
                 (not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
     )
@@ -74,14 +74,22 @@
         :precondition
             (and (CanScoop ?gripper ?pose ?pose2 ?cup ?pose3 ?control)
                 (AtPose ?gripper ?pose) (IsEmpty ?gripper)
-                (AtPose ?cup ?pose3) (HasNuts ?cup))
+                (AtPose ?cup ?pose3) (HasNuts ?cup) (not (DirtyNuts)) )
         :effect
-            (and (AtPose ?gripper ?pose2) (HasNuts ?gripper)
+            (and (AtPose ?gripper ?pose2) (HasNuts ?gripper) (DirtyNuts)
                 (CanMove ?gripper) (not (IsEmpty ?gripper))
                 (not (AtPose ?gripper ?pose)) (increase (total-cost) 1))
     )
 
-    (:action dumpvanilla
+  (:action wash
+    :parameters (?o ?p ?g ?q ?t)
+    :precondition (and (Kin ?o ?p ?g ?q ?t)
+                       (AtPose ?o ?p) (HandEmpty) (Wash ?o) (AtConf ?q) (not (UnsafeTraj ?t)) (or (VanillaDirty) (StrawDirty)))
+    :effect (and (CanMove)
+                 (not (AtPose ?o ?p)) (not (VanillaDirty)) (not (StrawDirty)) )
+  )
+  
+    (:action dumpvanilla1
     	:parameters (?gripper ?pose ?pose3 ?cup ?pose2 ?control)
     	:precondition
     		(and (CanDump ?gripper ?pose ?pose3 ?cup ?pose2 ?control)
@@ -94,7 +102,8 @@
     			(increase (total-cost) 1))
     )
 
-   (:action dumpstraw
+
+   (:action dumpstraw1
         :parameters (?gripper ?pose ?pose3 ?cup ?pose2 ?control)
         :precondition
             (and (CanDump ?gripper ?pose ?pose3 ?cup ?pose2 ?control)
@@ -107,7 +116,7 @@
                 (increase (total-cost) 1))
     )
 
-   (:action dumpnuts
+   (:action dumpnuts1
         :parameters (?gripper ?pose ?pose3 ?cup ?pose2 ?control)
         :precondition
             (and (CanDump ?gripper ?pose ?pose3 ?cup ?pose2 ?control)

@@ -1,31 +1,61 @@
 (define (domain blocksworld)
-  (:requirements :strips :equality)
-  (:predicates (clear ?x)
-               (on-table ?x)
-               (arm-empty)
-               (holding ?x)
-               (on ?x ?y))
+    (:requirements :strips :equality)
+    (:predicates
+      ; Static predicates (predicates that do not change over time)
+      (IsCup1 ?cup)
 
-  (:action pickup
-    :parameters (?ob)
-    :precondition (and (clear ?ob) (on-table ?ob) (arm-empty))
-    :effect (and (holding ?ob) (not (clear ?ob)) (not (on-table ?ob))
-                 (not (arm-empty))))
+      (DirtyVanilla)
+      (DirtyStraw)
+      (DirtyNuts)
 
-  (:action putdown
-    :parameters  (?ob)
-    :precondition (and (holding ?ob))
-    :effect (and (clear ?ob) (arm-empty) (on-table ?ob)
-                 (not (holding ?ob))))
+      (GripperEmpty)
+      (HasVanilla)
+      (HasStraw)
+      (HasNuts)
 
-  (:action stack
-    :parameters  (?ob ?underob)
-    :precondition (and  (clear ?underob) (holding ?ob))
-    :effect (and (arm-empty) (clear ?ob) (on ?ob ?underob)
-                 (not (clear ?underob)) (not (holding ?ob))))
+      (On ?cup ?block)
+    )
 
-  (:action unstack
-    :parameters  (?ob ?underob)
-    :precondition (and (on ?ob ?underob) (clear ?ob) (arm-empty))
-    :effect (and (holding ?ob) (clear ?underob)
-                 (not (on ?ob ?underob)) (not (clear ?ob)) (not (arm-empty)))))
+    (:action scoopvanilla
+      :parameters () 
+      :precondition
+        (and (GripperEmpty) (or (not (DirtyStraw)) (not (DirtyNuts)) ) )  
+      :effect
+        (and (DirtyVanilla) (not (GripperEmpty))
+         (increase (total-cost) 1))
+    )
+
+    (:action scoopstraw
+      :parameters () 
+      :precondition
+        (and (GripperEmpty) (or (not (DirtyVanilla)) (not (DirtyNuts)) ) )  
+      :effect
+        (and (DirtyStraw) (not (GripperEmpty))
+         (increase (total-cost) 1))
+    )
+
+    (:action scoopnuts
+      :parameters () 
+      :precondition
+        (and (GripperEmpty) (or (not (DirtyVanilla)) (not (DirtyStraw)) ) )  
+      :effect
+        (and (DirtyNuts) (not (GripperEmpty))
+         (increase (total-cost) 1))
+    )
+
+    (:action wash
+      :parameters ()
+      :precondition (and (HandEmpty) (or (DirtyVanilla) (DirtyStraw) (DirtyNuts)) )
+      :effect (and (not (DirtyVanilla))  (not (DirtyStraw)) (not (DirtyNuts)) )
+    )
+  
+    (:action dumpvanilla1
+      :parameters (?bowl)
+      :precondition
+        (and (not (GripperEmpty)) (HasVanilla) )
+      :effect
+        (and (not (HasVanilla)) (GripperEmpty) (increase (total-cost) 1) )
+    )
+
+)
+

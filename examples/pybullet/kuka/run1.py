@@ -5,12 +5,13 @@ from __future__ import print_function
 import cProfile
 import pstats
 import argparse
+import pybullet as p
 
 from examples.pybullet.utils.pybullet_tools.kuka_primitives import BodyPose, BodyConf, Command, get_grasp_gen, \
     get_stable_gen, get_ik_fn, get_free_motion_gen, \
     get_holding_motion_gen, get_movable_collision_test
 from examples.pybullet.utils.pybullet_tools.utils import WorldSaver, connect, dump_world, get_pose, set_pose, Pose, \
-    Point, set_default_camera, stable_z, \
+    Point, set_default_camera, stable_z, wait_for_duration, get_image, \
     BLOCK_URDF, get_configuration, SINK_URDF, STOVE_URDF, load_model, is_placement, get_body_name, \
     disconnect, DRAKE_IIWA_URDF, get_bodies, user_input, HideOutput, R2D2_URDF
     
@@ -230,11 +231,12 @@ def main(viewer=False, display=True, simulate=False, teleport=False):
 
     command = postprocess_plan(plan)
     # user_input('Execute?')
+    wait_for_duration(2)
     if simulate:
         command.control()
     else:
         #command.step()
-        command.refine(num_steps=10).execute(time_step=0.001)
+        command.refine(num_steps=50).execute(time_step=0.001)
 
     #wait_for_interrupt()
     user_input('Finish?')
