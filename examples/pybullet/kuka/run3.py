@@ -82,14 +82,17 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
     tub_vanilla = movable[1]
     bowl1 = movable[2]
     bowl2 = movable[3]
+    bowl3 = movable[4]
 
-    wash = movable[4]
+    wash = movable[5]
 
-    vanilla_scoop1 = movable[5]
-    vanilla_scoop2 = movable[6]
+    vanilla_scoop1 = movable[6]
+    vanilla_scoop2 = movable[7]
+    vanilla_scoop3 = movable[8]
 
-    straw_scoop1 = movable[7]
-    straw_scoop2 = movable[8]
+    straw_scoop1 = movable[9]
+    straw_scoop2 = movable[10]
+    straw_scoop3 = movable[11]
 
     print('Movable:', movable)
     print('Fixed:', fixed)
@@ -100,38 +103,31 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
                  ('AtPose', body, pose)]
         for surface in movable:
             if body != surface:
-                # init += [('Stackable', body, surface)]
+                init += [('Stackable', body, surface)]
                 if is_placement(body, surface):
                     init += [('Supported', body, pose, surface)]
 
     init += [('isEmpty1',)]
     init += [('isEmpty2',)]
+    init += [('isEmpty3',)]
     init += [('Bowl1', bowl1)]
     init += [('Bowl2', bowl2)]
+    init += [('Bowl3', bowl3)]
 
     init += [('VanillaScoop', vanilla_scoop1)]
     init += [('VanillaScoop', vanilla_scoop2)]
+    init += [('VanillaScoop', vanilla_scoop3)]
     init += [('StrawScoop', straw_scoop1)]
     init += [('StrawScoop', straw_scoop2)]
+    init += [('StrawScoop', straw_scoop3)]
 
     init += [('Wash', wash)]
 
-    ss = [straw_scoop1, straw_scoop2]
-    vs = [vanilla_scoop1, vanilla_scoop2]
+    ss = [straw_scoop1, straw_scoop2, straw_scoop3]
+    vs = [vanilla_scoop1, vanilla_scoop2, vanilla_scoop3]
 
-    for a in ss: 
-        init += [('Stackable', a, bowl1)]
-        init += [('Stackable', a, bowl2)]
-    for a in vs: 
-        init += [('Stackable', a, bowl1)]
-        init += [('Stackable', a, bowl2)]
-    for a in ss: 
-        for b in vs: 
-            init += [('Stackable', a, b)]
-            init += [('Stackable', b, a)]
-
-    random.shuffle(ss)
-    random.shuffle(vs)
+    # random.shuffle(ss)
+    # random.shuffle(vs)
 
     goal = ('and',
             ('AtConf', conf),
@@ -139,8 +135,8 @@ def pddlstream_from_problem(robot, movable=[], teleport=False, movable_collision
             ('First1', ss[0], bowl1),
             ('Second1', vs[0], ss[0]),
 
-            ('First2', ss[1], bowl2),
-            ('Second2', vs[1], ss[1]),
+            # ('First2', ss[1], bowl2),
+            # ('Second2', vs[1], ss[1]),
 
             # ('First3', vs[2], bowl3),
             # ('Second3', vs[2], ss[2]),
@@ -180,25 +176,31 @@ def load_world():
 
         bowl1 = load_model('models/bowl.urdf', fixed_base=False)
         bowl2 = load_model('models/bowl.urdf', fixed_base=False)
+        bowl3 = load_model('models/bowl.urdf', fixed_base=False)
 
         scoop_vanilla1 = load_model('models/vanilla_scoop.urdf', fixed_base=False)
         scoop_straw1 = load_model('models/straw_scoop.urdf', fixed_base=False)
         scoop_vanilla2 = load_model('models/vanilla_scoop.urdf', fixed_base=False)
         scoop_straw2 = load_model('models/straw_scoop.urdf', fixed_base=False)
+        scoop_vanilla3 = load_model('models/vanilla_scoop.urdf', fixed_base=False)
+        scoop_straw3 = load_model('models/straw_scoop.urdf', fixed_base=False)
 
     body_names = {
         tub_straw: 'tub_straw',
         tub_vanilla: 'tub_vanilla',
         scoop_vanilla1: 'scoop_vanilla1',
         scoop_vanilla2: 'scoop_vanilla2',
+        scoop_vanilla3: 'scoop_vanilla3',
         scoop_straw1: 'scoop_straw1',
         scoop_straw2: 'scoop_straw2',
+        scoop_straw3: 'scoop_straw3',
         bowl1: 'bowl1',
         bowl2: 'bowl2',
+        bowl3: 'bowl3',
         wash: 'wash',
     }
     
-    movable_bodies = [tub_straw, tub_vanilla, bowl1, bowl2, wash, scoop_vanilla1, scoop_vanilla2, scoop_straw1, scoop_straw2]
+    movable_bodies = [tub_straw, tub_vanilla, bowl1, bowl2, bowl3, wash, scoop_vanilla1, scoop_vanilla2, scoop_vanilla3, scoop_straw1, scoop_straw2, scoop_straw3]
     set_pose(tub_straw, Pose(Point(x=0.5, y=-0.5, z=-0.1)))
     set_pose(tub_vanilla, Pose(Point(x=+0.5, y=+0.0, z=-0.1)))
 
@@ -206,10 +208,13 @@ def load_world():
     set_pose(scoop_vanilla1, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla1, tub_vanilla))))
     set_pose(scoop_straw2, Pose(Point(x=0.65, y=-0.5, z=stable_z(scoop_straw2, tub_straw))))
     set_pose(scoop_vanilla2, Pose(Point(x=+0.65, y=+0.0, z=stable_z(scoop_vanilla2, tub_vanilla))))
+    set_pose(scoop_straw3, Pose(Point(x=0.35, y=-0.5, z=stable_z(scoop_straw3, tub_straw))))
+    set_pose(scoop_vanilla3, Pose(Point(x=+0.35, y=+0.0, z=stable_z(scoop_vanilla3, tub_vanilla))))
 
     set_pose(wash, Pose(Point(x=-0.5, y=+0.0, z=-0.1)))
     set_pose(bowl1, Pose(Point(x=-0.4, y=+0.5, z=0.0)))
     set_pose(bowl2, Pose(Point(x=-0.0, y=+0.5, z=0.0)))
+    set_pose(bowl3, Pose(Point(x=0.4, y=+0.5, z=0.0)))
     set_default_camera()
 
     return robot, body_names, movable_bodies

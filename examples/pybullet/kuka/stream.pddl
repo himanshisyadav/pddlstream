@@ -34,7 +34,7 @@
     :certified (HoldingMotion ?q1 ?t ?q2 ?o ?g)
   )
 
-  (:predicate (TrajCollision ?t ?o2 ?p2)
-    (and (Traj ?t) (Pose ?o2 ?p2))
-  )
+  ; (:predicate (TrajCollision ?t ?o2 ?p2)
+  ;   (and (Traj ?t) (Pose ?o2 ?p2))
+  ; )
 )

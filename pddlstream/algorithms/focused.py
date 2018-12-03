@@ -97,9 +97,9 @@ def solve_focused(problem, stream_info={}, action_info={}, synthesizers=[],
     # TODO: return to just using the highest level samplers at the start
     # TODO: select whether to search or sample based on expected success rates
     solve_stream_plan_fn = relaxed_stream_plan
-    #solve_stream_plan_fn = relaxed_stream_plan if effort_weight is None else simultaneous_stream_plan
-    #solve_stream_plan_fn = sequential_stream_plan # simultaneous_stream_plan | sequential_stream_plan
-    #solve_stream_plan_fn = incremental_stream_plan # incremental_stream_plan | exhaustive_stream_plan
+    # solve_stream_plan_fn = relaxed_stream_plan if effort_weight is None else simultaneous_stream_plan
+    # solve_stream_plan_fn = sequential_stream_plan # simultaneous_stream_plan | sequential_stream_plan
+    # solve_stream_plan_fn = incremental_stream_plan # incremental_stream_plan | exhaustive_stream_plan
     # TODO: warning check if using simultaneous_stream_plan or sequential_stream_plan with non-eager functions
     # TODO: no optimizers during search with relaxed_stream_plan
     num_iterations = 0
@@ -135,7 +135,7 @@ def solve_focused(problem, stream_info={}, action_info={}, synthesizers=[],
                                                             unit_costs=unit_costs,
                                                             unit_efforts=unit_efforts, effort_weight=effort_weight,
                                                             **search_kwargs)
-        #combined_plan, cost = solve_stream_plan(optimistic_process_streams(evaluations, streams + functions))
+        # combined_plan, cost = solve_stream_plan(optimistic_process_streams(evaluations, streams + functions))
         combined_plan, cost = iterative_solve_stream_plan(evaluations, streams, functions, solve_stream_plan)
         if action_info:
             combined_plan = reorder_combined_plan(evaluations, combined_plan, full_action_info, domain)
