@@ -156,11 +156,11 @@ def load_world():
     }
     
     movable_bodies = [tub_straw, tub_vanilla, scoop_vanilla, scoop_straw, bowl, wash]
-    set_pose(tub_straw, Pose(Point(x=0.5, y=-0.5, z=-0.1)))
-    set_pose(tub_vanilla, Pose(Point(x=+0.5, y=+0.0, z=-0.1)))
+    set_pose(tub_straw, Pose(Point(x=0.5, y=-0.5)))
+    set_pose(tub_vanilla, Pose(Point(x=+0.5, y=+0.0)))
     set_pose(scoop_straw, Pose(Point(x=0.5, y=-0.5, z=stable_z(scoop_straw, tub_straw))))
     set_pose(scoop_vanilla, Pose(Point(x=+0.5, y=+0.0, z=stable_z(scoop_vanilla, tub_vanilla))))
-    set_pose(wash, Pose(Point(x=-0.5, y=+0.0, z=-0.1)))
+    set_pose(wash, Pose(Point(x=-0.5, y=+0.0)))
     set_pose(bowl, Pose(Point(y=+0.5, z=0.2)))
     set_default_camera()
 
